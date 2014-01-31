@@ -1,10 +1,30 @@
-var service  = require('./service')
-  , Location = require('./views/location.jsx')
+var Loader = require('./components/loader.jsx')
 
-service.location().then(function(location) {
-  React.renderComponent(
-    <Location latitude={location[0]} longitude={location[1]} />,
-    document.getElementById('app')
-  )
-}, function(err) {
+React.initializeTouchEvents(true)
+var App = React.createClass({
+  getInitialState: function() {
+    return {
+      loaded: false
+    }
+  },
+  render: function() {
+    var main = null
+    if(this.state.loaded) {
+    } else {
+      main = <Loader />
+    }
+    return (
+      <div>
+        <header>
+          <h1>impulse</h1>
+        </header>
+        {main}
+      </div>
+    )
+  }
 })
+  
+React.renderComponent(
+  <App />,
+  document.getElementById('app')
+)
