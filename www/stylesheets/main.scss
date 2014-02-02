@@ -24,6 +24,7 @@ button {
 
 body {
   font-family: $font-family;
+  font-size: 16px;
   background-color: $background;
   margin: 0;
   height: 100%;
@@ -33,11 +34,7 @@ body {
   background-color: $background;
 }
 
-#navigation {
-  background-color: darken($background, 15%);
-}
-
-#favorites {
+#bookmarks {
   background-color: darken($background, 15%);
 }
 
@@ -57,4 +54,30 @@ header {
     padding-bottom: 0.25em;
   }
   border-bottom: 1px solid $soft;
+}
+
+.card-list {
+  padding: 15px;
+  bottom: 0;
+  
+  > .card {
+    background: lighten($background, 15%);
+  }
+}
+
+nav {
+  background-color: #333;
+  color: #bbb;
+  font-size: 2em;
+  padding-left: 1em;
+  > ul {
+    padding-top: 1em;
+    li {
+      padding-top: 0.25em;
+      padding-bottom: 0.25em;
+    }
+    li.active {
+      color: #ea2;
+    }
+  }
 }

@@ -301,56 +301,61 @@ function isUndefined(arg) {
 }
 
 },{}],2:[function(require,module,exports){
-/** @jsx React.DOM */var Header = require('./components/header.jsx')
-var bus = new (require('events')).EventEmitter()
+/** @jsx React.DOM */var bus = require('./bus')
+var Header = require('./components/header.jsx')
+var Navigation = require('./components/navigation.jsx')
 
 React.initializeTouchEvents(true)
 var App = React.createClass({displayName: 'App',
-  getInitialState: function() {
-    return {
-      view: ''
-    }
-  },
   componentDidMount: function() {
-    this.onToggleNavigation = this.props.bus.on('toggleNavigation', function() {
-      if (this.state.view == 'navigation') {
-        this.setState({view: ''})
-      } else {
-        this.setState({view: 'navigation'})
+    this.onView = bus.on('view', function(view, toggle) {
+      if(typeof toggle == 'undefined') {
+        toggle = false
       }
-    }.bind(this))
-    this.onToggleFavorites = this.props.bus.on('toggleFavorites', function() {
-      if (this.state.view == 'favorites') {
-        this.setState({view: ''})
+      if (this.state.view == view && toggle) {
+        view = 'home'
+      }
+      if (view == 'navigation') {
+        this.setState({pane: 'left'})
+      } else if (view == 'bookmarks') {
+        this.setState({pane: 'right'})
       } else {
-        this.setState({view: 'favorites'})
+        this.setState({view: view, pane: 'main'})
       }
     }.bind(this))
   },
   componentWillUnmount: function() {
-    this.props.bus.removeListener('toggleFavorites', this.onToggleFavorites)
-    this.props.bus.removeListener('toggleNavigation', this.onToggleNavigation)
+    bus.removeListener('view', this.onView)
   },
-  handleMainClick: function(event) {
-    if (this.state.view !== '') {
-      this.setState({view: ''})
+  getInitialState: function() {
+    return {
+      view: 'home',
+      pane: 'main'
     }
   },
   render: function() {
     var classes = React.addons.classSet({
       'drawer': true,
-      'drawer-left': this.state.view == 'favorites',
-      'drawer-right': this.state.view == 'navigation'
+      'drawer-left': this.state.pane == 'right',
+      'drawer-right': this.state.pane == 'left'
     })
+    var main = null
+    switch(this.state.view) {
+    case 'settings':
+      main = Header( {title:"settings"} )
+      break
+    default:
+      main = Header( {title:"home"} )
+    }
     return (
       React.DOM.div( {className:classes}, 
-        React.DOM.section( {id:"main", className:"drawer-main-pane", onClick:this.handleMainClick}, 
-          Header( {title:"Impulse", bus:this.props.bus} )
+        React.DOM.div( {id:"main", className:"drawer-main-pane"}, 
+          main
         ),
-        React.DOM.aside( {id:"navigation", className:"drawer-left-pane"}, 
-          React.DOM.h1(null, "left")
+        React.DOM.div( {className:"drawer-left-pane"}, 
+          Navigation( {view:this.state.view} )
         ),
-        React.DOM.aside( {id:"favorites", className:"drawer-right-pane"}, 
+        React.DOM.div( {className:"drawer-right-pane"}, 
           React.DOM.h1(null, "right")
         )
       )
@@ -359,53 +364,96 @@ var App = React.createClass({displayName: 'App',
 })
   
 React.renderComponent(
-  App( {bus:bus}),
+  App(null ),
   document.getElementById('app')
 )
 
-},{"./components/header.jsx":3,"events":1}],3:[function(require,module,exports){
+},{"./bus":3,"./components/header.jsx":6,"./components/navigation.jsx":9}],3:[function(require,module,exports){
+module.exports = new (require('events')).EventEmitter()
+},{"events":1}],4:[function(require,module,exports){
 /** @jsx React.DOM */module.exports = React.createClass({
-  handlePressNavigation: function(event) {
-    this.props.bus.emit('toggleNavigation')
-  },
-  handlePressFavorites: function(event) {
-    this.props.bus.emit('toggleFavorites')
+  render: function() {
+    return (
+      React.DOM.aside( {className:"drawer-right-pane"}, 
+        React.DOM.h1(null, "I'm on your right")
+      )
+    )
+  }
+})
+},{}],5:[function(require,module,exports){
+/** @jsx React.DOM */module.exports = React.createClass({
+  render: function() {
+    return (
+      React.DOM.section( {className:"card-list"}, 
+        React.DOM.div( {className:"card"}, 
+          React.DOM.h1(null, "A card")
+        ),
+        React.DOM.div( {className:"card"}, 
+          React.DOM.h1(null, "A card")
+        )
+      )
+    )
+  }
+})
+},{}],6:[function(require,module,exports){
+/** @jsx React.DOM */var bus = require('../bus')
+
+module.exports = React.createClass({
+  makeClickHandler: function(view) {
+    return function() {
+      bus.emit('view', view, true)
+    }
   },
   render: function() {
     return (
       React.DOM.header(null, 
-        React.DOM.button( {class:"navigation", onClick:this.handlePressNavigation}, 
+        React.DOM.button( {class:"navigation", onClick:this.makeClickHandler('navigation')}, 
           React.DOM.i( {className:"fa fa-bars"})
         ),
         React.DOM.h1(null, this.props.title),
-        React.DOM.button( {class:"favorites", onClick:this.handlePressFavorites}, 
+        React.DOM.button( {class:"bookmarks", onClick:this.makeClickHandler('bookmarks')}, 
           React.DOM.i( {className:"fa fa-bookmark-o"})
         )
       )
     )
   }
 })
-},{}],4:[function(require,module,exports){
+},{"../bus":3}],7:[function(require,module,exports){
 /** @jsx React.DOM */
-},{}],5:[function(require,module,exports){
-/** @jsx React.DOM */module.exports = React.createClass({
+},{}],8:[function(require,module,exports){
+/** @jsx React.DOM */var Header = require('./header.jsx')
+
+module.exports = React.createClass({
   render: function() {
     return (
-      React.DOM.p(null, this.props.screenX,", ", this.props.screenY)
-    )
-  }
-})
-},{}],6:[function(require,module,exports){
-/** @jsx React.DOM */module.exports = React.createClass({
-  render: function() {
-    return (
-      React.DOM.section( {className:"settings"}, 
-        React.DOM.li(null, "hi")
+      React.DOM.section( {id:"main", className:"drawer-main-pane"}, 
+        Header( {title:"main", bus:this.props.bus} )
       )
     )
   }
 })
-},{}],7:[function(require,module,exports){
+},{"./header.jsx":6}],9:[function(require,module,exports){
+/** @jsx React.DOM */var bus = require('../bus')
+
+module.exports = React.createClass({
+  makeClickHandler: function(view) {
+    return function() {
+      bus.emit('view', view)
+    }
+  },
+  render: function() {
+    return (
+      React.DOM.nav(null, 
+        React.DOM.ul(null, 
+          React.DOM.li( {className:this.props.view == 'home' ? 'active' : '', onClick:this.makeClickHandler('home')}, "Home"),
+          React.DOM.li( {className:this.props.view == 'settings' ? 'active' : '', onClick:this.makeClickHandler('settings')}, "Settings"),
+          React.DOM.li(null, "Logout")
+        )
+      )
+    )
+  }
+})
+},{"../bus":3}],10:[function(require,module,exports){
 function Impulse() {
   this.cache = {}
 }
@@ -427,10 +475,10 @@ Impulse.prototype.fetch = function(id) {
 }
 
 module.exports = Impulse
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 function User() {
 }
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var ready = require('./ready')
 
 module.exports = function() {
@@ -444,7 +492,7 @@ module.exports = function() {
     })
   })
 }
-},{"./ready":10}],10:[function(require,module,exports){
+},{"./ready":13}],13:[function(require,module,exports){
 module.exports = (function() {
   if(typeof PhoneGap !== 'undefined') {
     return new Promise(function(resolve, reject) {
@@ -461,4 +509,4 @@ module.exports = (function() {
     return Promise.resolve(true)
   }
 })()
-},{}]},{},[2,3,4,5,6,7,8,9,10])
+},{}]},{},[2,3,4,5,6,7,8,9,10,11,12,13])

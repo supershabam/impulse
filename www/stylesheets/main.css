@@ -1484,6 +1484,7 @@ button {
 
 body {
   font-family: "Fairview", sans-serif;
+  font-size: 16px;
   background-color: #f0f0f0;
   margin: 0;
   height: 100%; }
@@ -1491,10 +1492,7 @@ body {
 #main {
   background-color: #f0f0f0; }
 
-#navigation {
-  background-color: #c9c9c9; }
-
-#favorites {
+#bookmarks {
   background-color: #c9c9c9; }
 
 header {
@@ -1511,3 +1509,22 @@ header {
   header > h1 {
     padding-top: 0.25em;
     padding-bottom: 0.25em; }
+
+.card-list {
+  padding: 15px;
+  bottom: 0; }
+  .card-list > .card {
+    background: white; }
+
+nav {
+  background-color: #333;
+  color: #bbb;
+  font-size: 2em;
+  padding-left: 1em; }
+  nav > ul {
+    padding-top: 1em; }
+    nav > ul li {
+      padding-top: 0.25em;
+      padding-bottom: 0.25em; }
+    nav > ul li.active {
+      color: #ea2; }

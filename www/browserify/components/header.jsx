@@ -1,18 +1,19 @@
+var bus = require('../bus')
+
 module.exports = React.createClass({
-  handlePressNavigation: function(event) {
-    this.props.bus.emit('toggleNavigation')
-  },
-  handlePressFavorites: function(event) {
-    this.props.bus.emit('toggleFavorites')
+  makeClickHandler: function(view) {
+    return function() {
+      bus.emit('view', view, true)
+    }
   },
   render: function() {
     return (
       <header>
-        <button class="navigation" onClick={this.handlePressNavigation}>
+        <button class="navigation" onClick={this.makeClickHandler('navigation')}>
           <i className="fa fa-bars"></i>
         </button>
         <h1>{this.props.title}</h1>
-        <button class="favorites" onClick={this.handlePressFavorites}>
+        <button class="bookmarks" onClick={this.makeClickHandler('bookmarks')}>
           <i className="fa fa-bookmark-o"></i>
         </button>
       </header>

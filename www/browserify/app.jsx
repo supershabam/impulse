@@ -1,61 +1,66 @@
+var bus = require('./bus')
 var Header = require('./components/header.jsx')
-var bus = new (require('events')).EventEmitter()
+var Navigation = require('./components/navigation.jsx')
 
 React.initializeTouchEvents(true)
 var App = React.createClass({
-  getInitialState: function() {
-    return {
-      view: ''
-    }
-  },
   componentDidMount: function() {
-    this.onToggleNavigation = this.props.bus.on('toggleNavigation', function() {
-      if (this.state.view == 'navigation') {
-        this.setState({view: ''})
-      } else {
-        this.setState({view: 'navigation'})
+    this.onView = bus.on('view', function(view, toggle) {
+      if(typeof toggle == 'undefined') {
+        toggle = false
       }
-    }.bind(this))
-    this.onToggleFavorites = this.props.bus.on('toggleFavorites', function() {
-      if (this.state.view == 'favorites') {
-        this.setState({view: ''})
+      if (this.state.view == view && toggle) {
+        view = 'home'
+      }
+      if (view == 'navigation') {
+        this.setState({pane: 'left'})
+      } else if (view == 'bookmarks') {
+        this.setState({pane: 'right'})
       } else {
-        this.setState({view: 'favorites'})
+        this.setState({view: view, pane: 'main'})
       }
     }.bind(this))
   },
   componentWillUnmount: function() {
-    this.props.bus.removeListener('toggleFavorites', this.onToggleFavorites)
-    this.props.bus.removeListener('toggleNavigation', this.onToggleNavigation)
+    bus.removeListener('view', this.onView)
   },
-  handleMainClick: function(event) {
-    if (this.state.view !== '') {
-      this.setState({view: ''})
+  getInitialState: function() {
+    return {
+      view: 'home',
+      pane: 'main'
     }
   },
   render: function() {
     var classes = React.addons.classSet({
       'drawer': true,
-      'drawer-left': this.state.view == 'favorites',
-      'drawer-right': this.state.view == 'navigation'
+      'drawer-left': this.state.pane == 'right',
+      'drawer-right': this.state.pane == 'left'
     })
+    var main = null
+    switch(this.state.view) {
+    case 'settings':
+      main = <Header title="settings" />
+      break
+    default:
+      main = <Header title="home" />
+    }
     return (
       <div className={classes}>
-        <section id="main" className="drawer-main-pane" onClick={this.handleMainClick}>
-          <Header title="Impulse" bus={this.props.bus} />
-        </section>
-        <aside id="navigation" className="drawer-left-pane">
-          <h1>left</h1>
-        </aside>
-        <aside id="favorites" className="drawer-right-pane">
+        <div id="main" className="drawer-main-pane">
+          {main}
+        </div>
+        <div className="drawer-left-pane">
+          <Navigation view={this.state.view} />
+        </div>
+        <div className="drawer-right-pane">
           <h1>right</h1>
-        </aside>
+        </div>
       </div>
     )
   }
 })
   
 React.renderComponent(
-  <App bus={bus}/>,
+  <App />,
   document.getElementById('app')
 )
