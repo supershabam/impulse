@@ -1,7 +1,60 @@
+@import "reset";
 @import "bourbon/bourbon";
+@import "fontawesome/font-awesome";
 @import "drawer";
 
+@font-face { 
+  font-family: Fairview; src: url('/fonts/Fairview_Regular.otf'); 
+} 
+
+$font-family: 'Fairview', sans-serif;
+$background: hsl(0, 0%, 94%);
+$primary: #222;
+$secondary: #444;
+$soft: #ddd;
+
+button {
+  color: #333;
+  border: 0;
+  min-width: 44px;
+  min-height: 44px;
+  background-color: transparent;
+  outline: none;
+}
+
 body {
+  font-family: $font-family;
+  background-color: $background;
   margin: 0;
   height: 100%;
+}
+
+#main {
+  background-color: $background;
+}
+
+#navigation {
+  background-color: darken($background, 15%);
+}
+
+#favorites {
+  background-color: darken($background, 15%);
+}
+
+header {
+  color: #111;
+  background-color: lighten($background, 15%);
+  font-size: 2em;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+  > button {
+    font-size: 38px;
+  }
+  > h1 {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+  }
+  border-bottom: 1px solid $soft;
 }

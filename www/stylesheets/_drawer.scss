@@ -6,36 +6,34 @@
   right: 0;
   
   > .drawer-main-pane {
-    background: red;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    @include transition (all 0.2s ease-in-out);
+    @include transition (all 0.3s ease-in-out);
+    box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
   }
   
   > .drawer-left-pane {
-    background: blue;
     position: absolute;
     width: calc(100% - 44px);
     top: 0;
     bottom: 0;
     left: 0;
     @include transform(translateX(calc(-100% / 2)));
-    @include transition (all 0.2s ease-in-out);
+    @include transition (all 0.3s ease-in-out);
     z-index: -10;
   }
   
   > .drawer-right-pane {
-    background: yellow;
     position: absolute;
     width: calc(100% - 44px);
     top: 0;
     bottom: 0;
     right: 0;
     @include transform(translateX(calc(100% / 2)));
-    @include transition (all 0.2s ease-in-out);
+    @include transition (all 0.3s ease-in-out);
     z-index: -10;
   }
 }

@@ -1,7 +1,9 @@
 module.exports = React.createClass({
   render: function() {
     return (
-      <img src={this.props.image} />
+      <section className="settings">
+        <li>hi</li>
+      </section>
     )
   }
 })
