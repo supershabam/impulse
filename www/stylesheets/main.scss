@@ -1,1 +1,7 @@
-@import "loader";
+@import "bourbon/bourbon";
+@import "drawer";
+
+body {
+  margin: 0;
+  height: 100%;
+}

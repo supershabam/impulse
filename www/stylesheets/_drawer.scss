@@ -1,0 +1,65 @@
+.drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  
+  > .drawer-main-pane {
+    background: red;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    @include transition (all 0.2s ease-in-out);
+  }
+  
+  > .drawer-left-pane {
+    background: blue;
+    position: absolute;
+    width: calc(100% - 44px);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    @include transform(translateX(calc(-100% / 2)));
+    @include transition (all 0.2s ease-in-out);
+    z-index: -10;
+  }
+  
+  > .drawer-right-pane {
+    background: yellow;
+    position: absolute;
+    width: calc(100% - 44px);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    @include transform(translateX(calc(100% / 2)));
+    @include transition (all 0.2s ease-in-out);
+    z-index: -10;
+  }
+}
+
+.drawer.drawer-right {
+  > .drawer-main-pane {
+    @include transform(translateX(calc(100% - 44px)));
+  }
+  > .drawer-left-pane {
+    @include transform(translateX(0));
+  }
+  > .drawer-right-pane {
+    @include transform(translateX(calc((100% - 44px) + 100%)));
+  }
+}
+
+.drawer.drawer-left {
+  > .drawer-main-pane {
+    @include transform(translateX(calc(-100% + 44px)));
+  }
+  > .drawer-left-pane {
+    z-index: -11;
+  }
+  > .drawer-right-pane {
+    @include transform(translateX(0));
+  }
+}

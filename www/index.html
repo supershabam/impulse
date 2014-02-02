@@ -5,6 +5,41 @@
 <link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
 <script src="vendor/javascripts/es6-promises.js"></script>
 <script src="vendor/javascripts/react.js"></script>
-<title>impulse</title>
-<div id="app"></div>
-<script src="javascripts/app.js"></script>
+<title>Impulse</title>
+<div id="app" class="drawer drawer-right">
+  <div class="drawer-main-pane">
+    <h1>center</h1>
+  </div>
+  <div class="drawer-left-pane">
+    <h1>left</h1>
+  </div>
+  <div class="drawer-right-pane">
+    <h1>right</h1>
+  </div>
+</div>
+
+<script>
+  var app = document.getElementById('app')
+  var states = ['', 'drawer-right', 'drawer-left']
+  setInterval(function() {
+    states.forEach(function(state) {
+      if (state == '') {
+      } else {
+        app.classList.remove(state)
+      }
+    })
+    var state = states[Math.floor(Math.random() * states.length)]
+    if (state == '') {
+    } else {
+      app.classList.add(state)
+    }
+//    if(app.classList.contains('drawer-right')) {
+//      app.classList.remove('drawer-right')
+//      app.classList.add('drawer-left')
+//    } else if(app.classList.contains('drawer-left')) {
+//      app.classList.remove('drawer-left')
+//    } else {
+//      app.classList.add('drawer-right')
+//    }
+  }, 750)
+</script>
