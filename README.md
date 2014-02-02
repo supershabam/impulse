@@ -1,6 +1,32 @@
 impulse
 =======
 
+## app state
+
+- user : null or User object
+- view : ['cards', 'login', 'settings']
+- impulses : [Impulse] - starred view, queue view
+- drawer : ['left', 'main', 'right']
+
+```javascript
+bus.on('logout', function() {
+  app.setState({user: null})
+})
+bus.on('login', function(user) {
+  app.setState({user: user})
+})
+bus.on('toggleDrawerLeft', function() {
+  if (app.state.drawer === 'left') {
+    app.setState({drawer: 'main'})
+  } else {
+    app.setState({drawer: 'left'})
+  }
+})
+bus.on('view', function(view) {
+  app.setState({drawer: 'main', view: view})
+})
+```
+
 ## schemas
 
 ### impulse
